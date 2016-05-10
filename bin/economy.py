@@ -25,7 +25,9 @@ illegal_items.append("heroin_processed")
 
 illegal_items_market_volume = int(math.ceil(random.randint(int(sys.argv[3]), int(sys.argv[4])) / 1000.0) * 1000.0)
 
-market_share = float(random.randint(10, 30)) / 10
+market_share_legal = float(random.randint(10, 30)) / 10
+
+market_share_illegal = 1
 
 #
 # i suck at python. this is why there are so many useless loops over these items.
@@ -34,7 +36,7 @@ market_share = float(random.randint(10, 30)) / 10
 #
 # but given the number of items we are dealing with i doubt it will become a runtime problem.
 #
-def create_economy(items, market_volume):
+def create_economy(items, market_volume, market_share):
     prices = []
     adjusted_prices = []
     initial_market_volume = market_volume
@@ -89,7 +91,7 @@ def create_economy(items, market_volume):
         sys.stdout.write("# remaining market volume after adjustment run: %s\n" % bonus)
         prices = []
         for price in adjusted_prices:
-            if price.split(":")[0] in ["diamond_cut", "marijuana"]:
+            if price.split(":")[0] in ["diamond_cut", "cocaine_processed"]:
                 sys.stdout.write("# adding bonus to sell price for item %s\n" % price.split(":")[0])
                 sell_price = int(price.split(":")[2]) + bonus
                 buy_price = int(math.ceil(sell_price / 1000.0) * 1000.0)
@@ -102,16 +104,16 @@ def create_economy(items, market_volume):
 
 if __name__ == "__main__":
     sys.stdout.write("#\n")
-    sys.stdout.write("# using market share distribution factor: %s\n" % market_share)
+    sys.stdout.write("# using legal market share distribution factor: %s\n" % market_share_legal)
 
     sys.stdout.write("# legal items market volume in dollars: %s\n" % legal_items_market_volume)
     sys.stdout.write("# running economy simulation for legal prices\n")
-    legal_prices = create_economy(legal_items, legal_items_market_volume)
+    legal_prices = create_economy(legal_items, legal_items_market_volume, market_share_legal)
     sys.stdout.write("# done.\n")
 
     sys.stdout.write("# illegal items market volume in dollars: %s\n" % illegal_items_market_volume)
     sys.stdout.write("# running economy simulation for illegal prices\n")
-    illegal_prices = create_economy(illegal_items, illegal_items_market_volume)
+    illegal_prices = create_economy(illegal_items, illegal_items_market_volume, market_share_illegal)
     sys.stdout.write("# done.\n")
     sys.stdout.write("#\n")
 
